@@ -1649,3 +1649,53 @@ msgstr ""
 msgctxt "#31327"
 msgid "Expanded"
 msgstr ""
+
+#: /shortcuts/overrides.xml
+msgctxt "#31328"
+msgid "Hub - Movies (Library)"
+msgstr ""
+
+#: /shortcuts/overrides.xml
+msgctxt "#31329"
+msgid "Hub - TV Shows (Library)"
+msgstr ""
+
+#: /1080i/SkinSettings.xml
+msgctxt "#31330"
+msgid "Widget end row action"
+msgstr ""
+
+#: /shortcuts/overrides.xml
+msgctxt "#31331"
+msgid "Hub - TMDbHelper (Discover)"
+msgstr ""
+
+#: /1080i/SkinSettings.xml
+msgctxt "#31332"
+msgid "TMDbHelper hub quick navbar"
+msgstr ""
+
+#: /1080i/SkinSettings.xml
+msgctxt "#31333"
+msgid "Use text labels"
+msgstr ""
+
+#: /1080i/script-tmdbhelper-recommendations.xml
+msgctxt "#31334"
+msgid "Comments"
+msgstr ""
+
+#: /1080i/SkinSettings.xml
+msgctxt "#31335"
+msgid "Thin selectbox"
+msgstr ""
+
+#: /1080i/SkinSettings.xml
+msgctxt "#31336"
+msgid "Selectbox style"
+msgstr ""
+
+#: /1080i/Includes_Labels.xml
+msgctxt "#31337"
+msgid "Thin"
+msgstr ""

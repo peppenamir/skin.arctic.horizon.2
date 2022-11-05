@@ -30,7 +30,9 @@
                     <orientation>horizontal</orientation>
                     <itemgap>30</itemgap>
                     <onleft>6800</onleft>
-                    <onright>6901</onright>
+                    <onright>6500</onright>
+                    <ondown condition="!Integer.IsEqual(Container(6401).NumItems,0)">SetFocus(6401)</ondown>
+                    <ondown condition="Integer.IsEqual(Container(6401).NumItems,0)">ActivateWindow(videobookmarks)</ondown>
                     <include content="OSD_Button">
                         <param name="autoclose" value="true" />
                         <param name="visible" value="true" />
@@ -39,14 +41,9 @@
                         <param name="id" value="6100" />
                         <param name="groupid" value="6199" />
                         <onclick>PlayerControl(Play)</onclick>
-                        <onup condition="Player.Paused">PlayerControl(Play)</onup>
-                        <ondown condition="Player.Paused">PlayerControl(Play)</ondown>
-                        <onup condition="!Player.Forwarding32x">PlayerControl(Forward)</onup>
-                        <onup condition="!Player.Forwarding32x">SetProperty(PlayerSpeedControl,1)</onup>
-                        <ondown condition="!Player.Rewinding32x">PlayerControl(Rewind)</ondown>
-                        <ondown condition="!Player.Rewinding32x">SetProperty(PlayerSpeedControl,1)</ondown>
-                        <onunfocus>ClearProperty(PlayerSpeedControl)</onunfocus>
+                        <onfocus condition="Player.Forwarding | Player.Rewinding">PlayerControl(Play)</onfocus>
                         <onunfocus condition="Player.Forwarding | Player.Rewinding">PlayerControl(Play)</onunfocus>
+                        <onup>SetFocus(6101)</onup>
                     </include>
                     <include content="OSD_Button">
                         <param name="autoclose" value="true" />
@@ -55,8 +52,7 @@
                         <param name="id" value="6200" />
                         <param name="groupid" value="6299" />
                         <onclick>Seek(-10)</onclick>
-                        <onup>Action(StepForward)</onup>
-                        <ondown>Action(StepBack)</ondown>
+                        <onup>8200</onup>
                     </include>
                     <include content="OSD_Button">
                         <param name="autoclose" value="true" />
@@ -65,8 +61,7 @@
                         <param name="id" value="6300" />
                         <param name="groupid" value="6399" />
                         <onclick>Seek(10)</onclick>
-                        <onup>Action(StepForward)</onup>
-                        <ondown>Action(StepBack)</ondown>
+                        <onup>8200</onup>
                     </include>
                     <include content="OSD_Button">
                         <param name="autoclose" value="true" />
@@ -76,8 +71,7 @@
                         <param name="groupid" value="6499" />
                         <onclick condition="!String.IsEqual(VideoPlayer.PlaylistPosition,VideoPlayer.PlaylistLength) + !Skin.HasSetting(OSD.AlwaysDisplayStop)">PlayerControl(Next)</onclick>
                         <onclick condition="String.IsEqual(VideoPlayer.PlaylistPosition,VideoPlayer.PlaylistLength) | Skin.HasSetting(OSD.AlwaysDisplayStop)">PlayerControl(Stop)</onclick>
-                        <ondown condition="!Integer.IsEqual(Container(6401).NumItems,0)">SetFocus(6401)</ondown>
-                        <ondown condition="Integer.IsEqual(Container(6401).NumItems,0)">ActivateWindow(125)</ondown>
+                        <onup>8200</onup>
                     </include>
                     <include content="OSD_Button">
                         <param name="autoclose" value="true" />
@@ -101,11 +95,7 @@
                 <!-- Playback Speed Display -->
                 <include content="OSD_Menu_Back">
                     <param name="arrow_pos" value="410" />
-                    <visible>!Window.IsVisible(DialogSlider.xml)</visible>
-                    <visible>!Window.IsVisible(VideoOSDBookmarks.xml)</visible>
-                    <visible>!Window.IsVisible(DialogSettings.xml)</visible>
-                    <visible>Control.HasFocus(6100)</visible>
-                    <visible>Player.Forwarding | Player.Rewinding | !String.IsEmpty(Window.Property(PlayerSpeedControl))</visible>
+                    <visible>Control.HasFocus(6101)</visible>
                     <include>Animation_SlideIn_Dialog</include>
                     <left>40</left>
                     <width>480</width>
@@ -115,8 +105,24 @@
                         <height>160</height>
                         <left>grid_x04</left>
                         <right>grid_x04</right>
+                        <include content="Dialog_Menu_Button">
+                            <left>-grid_x04</left>
+                            <right>-grid_x04</right>
+                            <param name="id" value="6101" />
+                            <param name="groupid" value="6102" />
+                            <param name="control" value="button" />
+                            <param name="icon" value="" />
+                            <onup>6100</onup>
+                            <ondown>6100</ondown>
+                            <height>160</height>
+                            <onleft condition="Player.Paused">PlayerControl(Play)</onleft>
+                            <onright condition="Player.Paused">PlayerControl(Play)</onright>
+                            <onright condition="!Player.Forwarding32x">PlayerControl(Forward)</onright>
+                            <onleft condition="!Player.Rewinding32x">PlayerControl(Rewind)</onleft>
+                        </include>
                         <include content="OSD_TempoControl">
                             <param name="istempo">false</param>
+                            <param name="selected">true</param>
                         </include>
                     </control>
                 </include>
@@ -132,17 +138,9 @@
                     <align>right</align>
                     <onleft>6900</onleft>
                     <onright>6100</onright>
-                    <include content="OSD_Button">
-                        <param name="autoclose" value="true" />
-                        <param name="visible" value="VideoPlayer.Content(livetv)" />
-                        <param name="icon" value="osd/playlist.png" />
-                        <param name="id" value="6901" />
-                        <param name="groupid" value="6991" />
-                        <onclick>Dialog.Close(VideoOSD)</onclick>
-                        <onclick>ActivateWindow(PVROSDChannels)</onclick>
-                        <onup condition="VideoPlayer.HasEPG">Dialog.Close(VideoOSD)</onup>
-                        <onup condition="VideoPlayer.HasEPG">ActivateWindow(pvrchannelguide)</onup>
-                    </include>
+                    <ondown condition="String.IsEmpty(Window(Home).Property(OSDExpandInfo))">SetProperty(OSDExpandInfo,1,Home)</ondown>
+                    <ondown condition="!String.IsEmpty(Window(Home).Property(OSDExpandInfo))">SetFocus(6501,0,absolute)</ondown>
+
                     <include content="OSD_Button">
                         <param name="autoclose" value="true" />
                         <param name="visible" value="true" />
@@ -150,10 +148,6 @@
                         <param name="visible" value="true" />
                         <param name="id" value="6500" />
                         <param name="groupid" value="6599" />
-                        <onup>ClearProperty(OSDExpandInfo,Home)</onup>
-                        <ondown condition="String.IsEmpty(Window(Home).Property(OSDExpandInfo))">SetProperty(OSDExpandInfo,1,Home)</ondown>
-                        <ondown condition="!String.IsEmpty(Window(Home).Property(OSDExpandInfo))">SetFocus(6501,0,absolute)</ondown>
-                        <onunfocus>ClearProperty(OSDExpandInfo,Home)</onunfocus>
 
                         <onclick>SetProperty(OSDExtendedInfo,1,Home)</onclick>
                         <onclick condition="!Player.Paused + !Skin.HasSetting(OSD.DisablePauseOnInfo)">Pause</onclick>
@@ -166,6 +160,9 @@
                         <onclick condition="VideoPlayer.Content(movies) + !String.IsEmpty(VideoPlayer.IMDBNumber) + !String.StartsWith(VideoPlayer.IMDBNumber,tt)">RunScript(plugin.video.themoviedb.helper,recommendations=oninfo,tmdb_type=movie,tmdb_id=$INFO[VideoPlayer.IMDBNumber],window_id=1191)</onclick>
                         <onclick condition="VideoPlayer.Content(movies) + String.IsEmpty(VideoPlayer.IMDBNumber)">RunScript(plugin.video.themoviedb.helper,recommendations=oninfo,tmdb_type=movie,query=$WINPROP[Player.Title],window_id=1191)</onclick>
                         <onclick condition="VideoPlayer.Content(episodes)">RunScript(plugin.video.themoviedb.helper,recommendations=oninfo,tmdb_type=tv,query=$WINPROP[VideoPlayer.TvShowTitle],episode_year=$INFO[VideoPlayer.Year],window_id=1191)</onclick>
+
+                        <onup condition="!String.IsEmpty(Window(Home).Property(OSDExpandInfo))">ClearProperty(OSDExpandInfo,Home)</onup>
+                        <onunfocus>ClearProperty(OSDExpandInfo,Home)</onunfocus>
                     </include>
                     <include content="OSD_Button">
                         <param name="autoclose" value="true" />
@@ -183,7 +180,9 @@
                         <aligny>top</aligny>
                         <textoffsetx>0</textoffsetx>
                         <onclick>ActivateWindow(osdaudiosettings)</onclick>
-                        <onup>6601</onup>
+                        <onup condition="String.IsEmpty(Window(Home).Property(OSDExpandInfo))">SetFocus(6601)</onup>
+                        <onup condition="!String.IsEmpty(Window(Home).Property(OSDExpandInfo))">ClearProperty(OSDExpandInfo,Home)</onup>
+                        <onunfocus>ClearProperty(OSDExpandInfo,Home)</onunfocus>
                     </include>
                     <include content="OSD_Button">
                         <param name="autoclose" value="true" />
@@ -200,7 +199,9 @@
                         <aligny>top</aligny>
                         <textoffsetx>0</textoffsetx>
                         <onclick>ActivateWindow(osdsubtitlesettings)</onclick>
-                        <onup>6701</onup>
+                        <onup condition="String.IsEmpty(Window(Home).Property(OSDExpandInfo))">SetFocus(6701)</onup>
+                        <onup condition="!String.IsEmpty(Window(Home).Property(OSDExpandInfo))">ClearProperty(OSDExpandInfo,Home)</onup>
+                        <onunfocus>ClearProperty(OSDExpandInfo,Home)</onunfocus>
                     </include>
                     <include content="OSD_Button">
                         <param name="autoclose" value="true" />
@@ -209,8 +210,10 @@
                         <param name="visible" value="true" />
                         <param name="id" value="6800" />
                         <param name="groupid" value="6899" />
-                        <onup>7800</onup>
                         <onclick>ActivateWindow(osdvideosettings)</onclick>
+                        <onup condition="String.IsEmpty(Window(Home).Property(OSDExpandInfo))">SetFocus(7800)</onup>
+                        <onup condition="!String.IsEmpty(Window(Home).Property(OSDExpandInfo))">ClearProperty(OSDExpandInfo,Home)</onup>
+                        <onunfocus>ClearProperty(OSDExpandInfo,Home)</onunfocus>
                     </include>
                 </control>
 
@@ -241,7 +244,8 @@
                 <include content="OSD_Menu_Back">
                     <param name="arrow_pos" value="70" />
                     <visible>!Window.IsVisible(DialogSlider.xml)</visible>
-                    <visible>!Window.IsVisible(VideoOSDBookmarks.xml)</visible>
+                    <visible>!Window.IsVisible(videobookmarks)</visible>
+                    <visible>!Window.IsVisible(pvrchannelguide)</visible>
                     <visible>!Window.IsVisible(DialogSettings.xml)</visible>
                     <visible>Control.HasFocus(6800) | ControlGroup(6801).HasFocus() | Control.HasFocus(7800)</visible>
                     <include>Animation_SlideIn_Dialog</include>
@@ -273,7 +277,7 @@
                             <param name="control" value="button" />
                             <param name="icon" value="special://skin/extras/icons/bookmark.png" />
                             <label>$LOCALIZE[298]</label>
-                            <onclick>ActivateWindow(125)</onclick>
+                            <onclick>ActivateWindow(videobookmarks)</onclick>
                         </include>
                         <control type="group" id="6804">
                             <height>40</height>
@@ -361,22 +365,37 @@
 
         <include content="OSD_CastInfo_HintText">
             <param name="label">$VAR[Label_OSD_HintText]</param>
-            <visible>Control.HasFocus(6500) | Control.HasFocus(6400) | Control.HasFocus(6401) | Control.HasFocus(6501)</visible>
-            <visible>!$EXP[Exp_OSD_ExpandInfo] | [[Control.HasFocus(6401) | Control.HasFocus(6501)] + !Window.IsVisible(125)]</visible>
+            <visible>ControlGroup(6000).HasFocus() | ControlGroup(6001).HasFocus()</visible>
+            <visible>!$EXP[Exp_OSD_ExpandInfo] | [[Control.HasFocus(6401) | Control.HasFocus(6501)] + !Window.IsVisible(videobookmarks) + !Window.IsVisible(pvrchannelguide)]</visible>
             <include>Animation_FadeOut</include>
             <include>Animation_FadeIn_Delay</include>
         </include>
 
         <control type="slider">
             <left>view_pad</left>
-            <centerbottom>160</centerbottom>
+            <centerbottom>166</centerbottom>
             <height>60</height>
-            <width>1800</width>
+            <width>1760</width>
             <texturesliderbar/>
             <textureslidernib/>
             <textureslidernibfocus/>
             <info>Player.Progress</info>
             <action>seek</action>
+        </control>
+
+
+        <control type="slider" id="8200">
+            <centerleft>50%</centerleft>
+            <width>1760</width>
+            <height>112</height>
+            <centerbottom>166</centerbottom>
+            <info>Player.Progress</info>
+            <action>seek</action>
+            <texturesliderbar colordiffuse="00ffffff">progress/slider_bg.png</texturesliderbar>
+            <textureslidernib />
+            <textureslidernibfocus colordiffuse="main_fg_100">progress/slider_nib.png</textureslidernibfocus>
+            <onup>6000</onup>
+            <ondown>6000</ondown>
         </control>
     </controls>
 </window>
